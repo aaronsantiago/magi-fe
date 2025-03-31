@@ -34,7 +34,9 @@
 		"@codemirror/language": "^6.11.0",
 		"@codemirror/legacy-modes": "^6.5.0",
 		"@codemirror/theme-one-dark": "^6.1.2",
+		"@electron/remote": "^2.1.2",
 		"codemirror-mode-luau": "^1.0.2",
+		"install": "^0.13.0",
 		"magi-lib": "github:aaronsantiago/magi-lib",
 		"svelte-codemirror-editor": "^1.4.1",
 		"svelte-persisted-store": "^0.12.0"

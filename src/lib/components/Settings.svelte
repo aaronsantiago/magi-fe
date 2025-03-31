@@ -1,13 +1,21 @@
 <script>
   // import { ipcCacheSend } from "../logic/ipcCacheSend"
+  // import {dialog} from "@electron/remote"
   import { get } from 'svelte/store'
+
+  const {dialog, getCurrentWindow} = require('@electron/remote')
 
   export let rivetFilename;
   export let magiFilename;
   export let api;
 
   const pickRivetFile = async () => {
-    let filename = await window.electron.ipcRenderer.invoke('pickRivetFile');
+    // let filename = await window.electron.ipcRenderer.invoke('pickRivetFile');
+    let filename = await dialog.showOpenDialog(getCurrentWindow(), {
+      properties: ['openFile'],
+      filters: [{ name: 'Rivet Project', extensions: ['rivet-project'] }]
+    });
+    console.log(filename);
     rivetFilename.set(filename)
   }
 
