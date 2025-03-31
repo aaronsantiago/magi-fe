@@ -1,11 +1,13 @@
 <script>
+	import { getRuntime } from '$lib/logic/magi';
+
   export let graphData
   export let graphScripts
   export let runtimeData
   export let scripts
   export let status
 
-  console.log('graphScripts', graphScripts)
+  import * as magi from 'magi-lib'
 
   $: scriptNames = Object.keys(scripts)
 
@@ -27,24 +29,17 @@
 
     graphScripts = graphScripts
   }
-  $: console.log(status);
+
+  function runGraph(graph) {
+    magi.runGraph(getRuntime(), graph);
+  }
 </script>
 
 <div class="grid grid-cols-1 gap-4 py-4 w-1/3">
   {#each Object.keys(graphData).filter((name) => !name.startsWith('_')) as graph}
     <div class={"card w-full shadow-xl " + (status?.graphs.indexOf(graph) > -1 ? "bg-lime-900" : "bg-base-100")}>
       <div class="card-body relative">
-        <div class="dropdown absolute top-0 right-0">
-          <div tabindex="0" role="button" class="btn m-1">scripts</div>
-          <ul
-            tabindex="0"
-            class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
-          >
-            {#each scriptNames as script}
-              <li><a on:click={() => addScript(graph, script)}>{script}</a></li>
-            {/each}
-          </ul>
-        </div>
+        <button class="btn btn-primary absolute top-0 right-0" on:click={() => runGraph(graph)}>Run</button>
         <h2 class="card-title">{graph}</h2>
         <p>
           inputs:
@@ -70,14 +65,14 @@
             {/each}
           {/if}
         </p>
-        {#if graphScripts[graph] && graphScripts[graph].length > 0}
+        <!-- {#if graphScripts && graphScripts[graph] && graphScripts[graph].length > 0}
           <p>
             graphScripts:
             {#each graphScripts[graph] as script}
               <button class="btn" on:click={() => removeScript(graph, script)}>{script}</button>
             {/each}
           </p>
-        {/if}
+        {/if} -->
       </div>
     </div>
   {/each}
