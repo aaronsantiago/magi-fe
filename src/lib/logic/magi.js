@@ -12,16 +12,18 @@ let currentRuntime;
 
 magiFilename.subscribe((value) => {
 	fs.readFile(value, 'utf8', (err, data) => {
-		if (err) throw err;
+		if (err) {
+			console.log('Error reading magi file:', err);
+			return;
+		}
 
 		magi.loadMagiProject(currentRuntime, data);
 	});
 });
 
-export function saveMagiFile() {
-	let filename = get(magiFilename);
-  let fileContent = JSON.stringify(magi.makeSerializeable(currentRuntime), null, 2);
-  console.log("saving magi file", fileContent);
+export function saveMagiFile(filename) {
+	let fileContent = JSON.stringify(magi.makeSerializeable(currentRuntime), null, 2);
+	console.log('saving magi file', fileContent);
 	fs.writeFile(filename, fileContent, (err) => {
 		if (err) throw err;
 		console.log('magi file saved');
@@ -36,7 +38,10 @@ rivetFilename.subscribe((filename) => {
 	}
 	function readRivetProject() {
 		fs.readFile(filename, 'utf8', (err, data) => {
-			if (err) throw err;
+			if (err) {
+				console.log(err);
+				return;
+			}
 			console.log('rivetWatcher load', data);
 			magi.loadRivetProject(currentRuntime, data);
 		});

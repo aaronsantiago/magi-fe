@@ -37,14 +37,20 @@
 		}
 		console.log('saving magi file', filename);
 
-		saveMagiFile();
+		saveMagiFile(filename);
 
-		// magiFilename.set(filename);
+		magiFilename.set(filename);
 	};
 
 	const pickSaveMagiFile = async () => {
-		let filename = await window.electron.ipcRenderer.invoke('pickSaveMagiFile');
-		saveMagiFileCallback(filename);
+    let file = await dialog.showSaveDialog(getCurrentWindow(), {
+      properties: ['openFile'],
+      filters: [{ name: 'Magi Project', extensions: ['magi'] }]
+    })
+    console.log('file: ', file);
+    if (!file.canceled) {
+      saveMagiFileCallback(file.filePath);
+    }
 	};
 
 	$: if ($rivetFilename) {

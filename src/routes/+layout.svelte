@@ -26,7 +26,7 @@
   <button class="btn" onclick={()=>modalNode.showModal()}>settings</button>
   <dialog bind:this={modalNode} class="modal">
     <div class="modal-box">
-      <Settings {runtime} />
+      <Settings {magiFilename} {rivetFilename} {runtime} />
     </div>
     <form method="dialog" class="modal-backdrop">
       <button>close</button>
