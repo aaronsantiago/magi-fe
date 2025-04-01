@@ -1,12 +1,12 @@
 <script>
 	import { getRuntime } from '$lib/logic/magi';
-	export let runtimeData;
-	export let pinnedData;
 	import * as magi from 'magi-lib';
+
+	export let runtime;
 
 	function handleChange(event) {
 		const { name, value } = event.target;
-		runtimeData[name] = value;
+		runtime.runtimeData[name] = value;
 		magi.updateRuntimeData(getRuntime(), {
 			[name]: value
 		});
@@ -15,24 +15,24 @@
 	let newFieldName, newFieldValue;
 
 	function addField() {
-		runtimeData[newFieldName.value] = newFieldValue.value;
+		runtime.runtimeData[newFieldName.value] = newFieldValue.value;
 		newFieldName.value = '';
 		newFieldValue.value = '';
 	}
 
 	function removeField(fieldName) {
-		delete runtimeData[fieldName];
-		runtimeData = { ...runtimeData };
+		delete runtime.runtimeData[fieldName];
+		runtime.runtimeData = { ...runtime.runtimeData };
 	}
 
 	function togglePin(data) {
-		if (pinnedData.indexOf(data) > -1) {
-			pinnedData.splice(pinnedData.indexOf(data), 1);
+		if (runtime.pinnedData.indexOf(data) > -1) {
+		runtime.pinnedData.splice(runtime.pinnedData.indexOf(data), 1);
 		} else {
-			pinnedData.push(data);
+			runtime.pinnedData.push(data);
 		}
 
-		pinnedData = pinnedData;
+		runtime.pinnedData = runtime.pinnedData;
 	}
 </script>
 
@@ -44,7 +44,7 @@
 				<th class="flex-end">Value</th>
 			</tr>
 		</thead>
-		{#each Object.keys(runtimeData) as data}
+		{#each Object.keys(runtime.runtimeData) as data}
 			<tr class="w-full flex">
 				<td>
 					<button class="btn" on:click={() => removeField(data)}>Remove</button>
@@ -54,7 +54,7 @@
 				<td class="flex-grow"
 					><input
 						type="text"
-						value={runtimeData[data]}
+						value={runtime.runtimeData[data]}
 						name={data}
 						on:change={handleChange}
 						class="input w-full"

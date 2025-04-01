@@ -1,10 +1,10 @@
 <script>
   import Settings from '$lib/components/Settings.svelte'
 	import '../app.css';
-	import { rivetFilename, magiFilename, api } from '$lib/logic/magi';
+	import { rivetFilename, magiFilename } from '$lib/logic/magi';
+	import { runtime } from '$lib/logic/magiSvelte.svelte.js';
 	import { get } from 'svelte/store';
 
-	console.log(get(api));
 
 	let { children } = $props();
 
@@ -16,12 +16,6 @@
   // $effect(() => {
   //   console.log(api.apiKey);
   // })
-
-  $effect(() => {
-    for (const key in api) {
-      console.log(key, api[key]);
-    }
-  })
 </script>
 
 <div class="navbar bg-base-100 p-4 w-full box-border">
@@ -32,12 +26,11 @@
   <button class="btn" onclick={()=>modalNode.showModal()}>settings</button>
   <dialog bind:this={modalNode} class="modal">
     <div class="modal-box">
-      <Settings {rivetFilename} {magiFilename} {api} />
+      <Settings {runtime} />
     </div>
     <form method="dialog" class="modal-backdrop">
       <button>close</button>
     </form>
   </dialog>
-  <!-- <button class="btn" on:click={updateGraphs}>Run Graphs</button> -->
 </div>
 {@render children()}

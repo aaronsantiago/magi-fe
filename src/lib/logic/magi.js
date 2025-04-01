@@ -1,15 +1,12 @@
 import * as magi from 'magi-lib';
 import { persisted } from 'svelte-persisted-store';
+import { get } from 'svelte/store';
 
 let fs = require('fs');
+const chokidar = require('chokidar');
 
 export const magiFilename = persisted('magiFilename', '');
 export const rivetFilename = persisted('rivetFilename', '');
-export const api = persisted('api', {
-	apiKey: '',
-	organizationId: '',
-	endpointUrl: ''
-});
 
 let currentRuntime;
 
@@ -21,12 +18,36 @@ magiFilename.subscribe((value) => {
 	});
 });
 
-rivetFilename.subscribe((value) => {
-	fs.readFile(value, 'utf8', (err, data) => {
+export function saveMagiFile() {
+	let filename = get(magiFilename);
+  let fileContent = JSON.stringify(magi.makeSerializeable(currentRuntime), null, 2);
+  console.log("saving magi file", fileContent);
+	fs.writeFile(filename, fileContent, (err) => {
 		if (err) throw err;
-
-		magi.loadRivetProject(currentRuntime, data);
+		console.log('magi file saved');
 	});
+}
+
+let rivetWatcher;
+rivetFilename.subscribe((filename) => {
+	console.log('rivetWatcher', filename);
+	if (rivetWatcher) {
+		rivetWatcher.close();
+	}
+	function readRivetProject() {
+		fs.readFile(filename, 'utf8', (err, data) => {
+			if (err) throw err;
+			console.log('rivetWatcher load', data);
+			magi.loadRivetProject(currentRuntime, data);
+		});
+	}
+	rivetWatcher = chokidar.watch(filename, {
+		persistent: true
+	});
+	rivetWatcher.on('change', async () => {
+		readRivetProject();
+	});
+	readRivetProject();
 });
 
 export function initializeMagi(options) {

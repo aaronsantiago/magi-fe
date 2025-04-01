@@ -1,11 +1,17 @@
 <script>
 	import { get } from 'svelte/store';
+	import { saveMagiFile } from '$lib/logic/magi';
+	import * as magiApi from 'magi-lib';
 
 	const { dialog, getCurrentWindow } = require('@electron/remote');
 
 	export let rivetFilename;
 	export let magiFilename;
-	export let api;
+	export let runtime;
+
+	if (!runtime.api) {
+	  runtime.api = {};
+	}
 
 	const pickRivetFile = async () => {
 		let filePick = await dialog.showOpenDialog(getCurrentWindow(), {
@@ -25,18 +31,20 @@
 		magiFilename.set(filename);
 	};
 
-	const saveMagiFile = async (filename) => {
+	const saveMagiFileCallback = async (filename) => {
 		if (!filename || typeof filename !== 'string') {
 			filename = get(magiFilename);
 		}
 		console.log('saving magi file', filename);
-		// await ipcCacheSend('saveMagiFile', filename);
-		magiFilename.set(filename);
+
+		saveMagiFile();
+
+		// magiFilename.set(filename);
 	};
 
 	const pickSaveMagiFile = async () => {
 		let filename = await window.electron.ipcRenderer.invoke('pickSaveMagiFile');
-		saveMagiFile(filename);
+		saveMagiFileCallback(filename);
 	};
 
 	$: if ($rivetFilename) {
@@ -47,21 +55,21 @@
 		console.log('loading magi project', $magiFilename);
 	}
 
-	$: apiKey = $api.apiKey;
-	$: organizationId = $api.organizationId;
-	$: endpointUrl = $api.endpointUrl;
+	$: apiKey = runtime.api.apiKey;
+	$: organizationId = runtime.api.organizationId;
+	$: endpointUrl = runtime.api.endpointUrl;
 
-	$: api.set({
-		apiKey,
-		organizationId,
-		endpointUrl
-	});
+	$: {
+		console.log("settings updated", apiKey, organizationId, endpointUrl);
+		magiApi.updateRuntime(runtime, { api:{apiKey, organizationId, endpointUrl }});
+	}
+
 </script>
 
 <div>
 	<button class="btn" on:click={pickRivetFile}>Load Rivet</button>
 	<button class="btn" on:click={pickMagiFile}>Load Magi</button>
-	<button class="btn" on:click={saveMagiFile}>Save Magi</button>
+	<button class="btn" on:click={saveMagiFileCallback}>Save Magi</button>
 	<button class="btn" on:click={pickSaveMagiFile}>Save Magi As</button>
 	<label class="form-control w-full max-w-xs">
 		<div class="label">

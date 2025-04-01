@@ -8,37 +8,33 @@
 	import { onDestroy } from 'svelte';
 	import { initializeMagi, getRuntime, setRuntime } from '$lib/logic/magi'
 	import * as magi from 'magi-lib'
+	import * as magiSvelte from '$lib/logic/magiSvelte.svelte.js'
 
-	let runtime = $state(initializeMagi());
+	// let runtime = $state(initializeMagi());
 
-	$inspect(runtime).with(console.trace);
-	setRuntime(runtime);
+	// // $inspect(runtime).with(console.trace);
+	// setRuntime(runtime);
 
-	let pinnedData = []
-	let graphData = $derived(runtime.graphData);
-	let runtimeData = $derived(runtime.runtimeData);
-	let scripts = $derived(runtime.scripts);
-	let graphScripts = $derived(runtime.graphScripts);
-	let status = $derived(runtime.status);
+	// let pinnedData = []
+	// let graphData = $derived(runtime.graphData);
+	// let runtimeData = $derived(runtime.runtimeData);
+	// let scripts = $derived(runtime.scripts);
+	// let graphScripts = $derived(runtime.graphScripts);
+	// let status = $derived(runtime.status);
+	// let api = $derived(runtime.api);
 
 </script>
 
 <div class="bg-base-300 w-[100vw] h-[100vh] overflow-y-auto p-4 overflow-x-hidden">
 
   <div>
-    <PinnedData bind:runtimeData {pinnedData} />
+    <PinnedData runtime={magiSvelte.runtime} />
   </div>
   <div class="flex w-full">
-    {#if graphData && runtimeData}
-      <GraphData {graphData} {runtimeData} {status} bind:graphScripts bind:scripts />
-    {/if}
-    {#if runtimeData}
-      <div class="flex-grow">
-        <RuntimeDataEntry bind:runtimeData bind:pinnedData />
-      </div>
-    {/if}
+    <GraphData runtime={magiSvelte.runtime} />
+    <div class="flex-grow">
+      <RuntimeDataEntry runtime={magiSvelte.runtime} />
+    </div>
   </div>
-  {#if scripts}
-    <Scripts {status} bind:scripts/>
-  {/if}
+  <Scripts runtime={magiSvelte.runtime} />
 </div>

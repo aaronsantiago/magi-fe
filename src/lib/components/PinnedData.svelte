@@ -1,8 +1,7 @@
 <script>
   import PrettyJson from "./PrettyJson.svelte"
 
-  export let runtimeData
-  export let pinnedData
+  export let runtime
 
   $: modes = {}
   function toggleMode(data) {
@@ -15,16 +14,16 @@
 </script>
 
 <div class="p-4">
-  {#each pinnedData as data}
+  {#each runtime?.pinnedData as data}
     <div class="card shadow-xl">
       <div class="card-body">
         <h2 class="card-title">{data}
           <button class="btn" on:click={() => toggleMode(data)}>ToggleJSON</button>
         </h2>
         {#if modes[data] === 'json'}
-          <PrettyJson data={JSON.parse(runtimeData[data])}/>
+          <PrettyJson data={JSON.parse(runtime.runtimeData[data])}/>
         {:else}
-          <textarea bind:value={runtimeData[data]}></textarea>
+          <textarea bind:value={runtime.runtimeData[data]}></textarea>
         {/if}
       </div>
     </div>

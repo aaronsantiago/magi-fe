@@ -28,7 +28,7 @@ importers:
         version: 0.13.0
       magi-lib:
         specifier: github:aaronsantiago/magi-lib
-        version: https://codeload.github.com/aaronsantiago/magi-lib/tar.gz/c980800e95f9306eb5121b5cbe1ecd76454f4ce3(ws@8.18.1)
+        version: https://codeload.github.com/aaronsantiago/magi-lib/tar.gz/314809681e789771b9c076854a81caa3c0933284(ws@8.18.1)
       svelte-codemirror-editor:
         specifier: ^1.4.1
         version: 1.4.1(codemirror@6.0.1)(svelte@5.25.3)
@@ -1543,9 +1543,9 @@ packages:
     resolution: {integrity: sha512-WE7p0p7W1xji9qxkLYsvcIxZyfP48GuFrWIBQZIsbjCyf65dG1rv4n83HcOyEyhvzxJCrUoObCRNFgRNIQ5KNA==}
     engines: {node: '>=12'}
 
-  magi-lib@https://codeload.github.com/aaronsantiago/magi-lib/tar.gz/c980800e95f9306eb5121b5cbe1ecd76454f4ce3:
-    resolution: {tarball: https://codeload.github.com/aaronsantiago/magi-lib/tar.gz/c980800e95f9306eb5121b5cbe1ecd76454f4ce3}
-    version: 2.0.0
+  magi-lib@https://codeload.github.com/aaronsantiago/magi-lib/tar.gz/314809681e789771b9c076854a81caa3c0933284:
+    resolution: {tarball: https://codeload.github.com/aaronsantiago/magi-lib/tar.gz/314809681e789771b9c076854a81caa3c0933284}
+    version: 2.1.2
 
   magic-string@0.30.17:
     resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
@@ -3502,7 +3502,7 @@ snapshots:
 
   luxon@3.6.0: {}
 
-  magi-lib@https://codeload.github.com/aaronsantiago/magi-lib/tar.gz/c980800e95f9306eb5121b5cbe1ecd76454f4ce3(ws@8.18.1):
+  magi-lib@https://codeload.github.com/aaronsantiago/magi-lib/tar.gz/314809681e789771b9c076854a81caa3c0933284(ws@8.18.1):
     dependencies:
       '@ironclad/rivet-core': 1.23.1(ws@8.18.1)
       fengari: 0.1.4
