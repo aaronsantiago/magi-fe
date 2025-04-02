@@ -44,24 +44,26 @@
 				<th class="flex-end">Value</th>
 			</tr>
 		</thead>
-		{#each Object.keys(runtime.runtimeData) as data}
-			<tr class="w-full flex">
-				<td>
-					<button class="btn" on:click={() => removeField(data)}>Remove</button>
-					<button class="btn" on:click={() => togglePin(data)}>Pin</button>
-					{data}
-				</td>
-				<td class="flex-grow"
-					><input
-						type="text"
-						value={runtime.runtimeData[data]}
-						name={data}
-						on:change={handleChange}
-						class="input w-full"
-					/></td
-				>
-			</tr>
-		{/each}
+		{#if runtime.runtimeData}
+  		{#each Object.keys(runtime.runtimeData) as data}
+  			<tr class="w-full flex">
+  				<td>
+  					<button class="btn" on:click={() => removeField(data)}>Remove</button>
+  					<button class="btn" on:click={() => togglePin(data)}>Pin</button>
+  					{data}
+  				</td>
+  				<td class="flex-grow"
+  					><input
+  						type="text"
+  						value={runtime.runtimeData[data]}
+  						name={data}
+  						on:change={handleChange}
+  						class="input w-full"
+  					/></td
+  				>
+  			</tr>
+  		{/each}
+    {/if}
 	</table>
 	<div class="flex flex-row gap-4 w-full">
 		<input

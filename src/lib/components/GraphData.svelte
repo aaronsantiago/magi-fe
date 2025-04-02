@@ -4,8 +4,6 @@
 
 	export let runtime;
 
-	$: scriptNames = Object.keys(runtime.scripts);
-
 	function runGraph(graph) {
 		magi.runGraph(runtime, graph);
 	}

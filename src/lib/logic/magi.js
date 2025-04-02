@@ -5,13 +5,21 @@ import { get } from 'svelte/store';
 let fs = require('fs');
 const chokidar = require('chokidar');
 
+export const hostMagi = persisted('hostMagi', true);
+export const useSocketIO = persisted('useSocket', false);
+export const socketIOUrl = persisted('socketIOUrl', '');
+export const socketIOBase = persisted('socketIOBase', 'magi');
+
+export const loadLocalMagiFile = persisted('loadLocalMagiFile', false);
+export const loadLocalRivetFile = persisted('loadLocalMagiFile', false);
+
 export const magiFilename = persisted('magiFilename', '');
 export const rivetFilename = persisted('rivetFilename', '');
 
 let currentRuntime;
 
-magiFilename.subscribe((value) => {
-	fs.readFile(value, 'utf8', (err, data) => {
+function _loadMagiFile(filename) {
+  fs.readFile(filename, 'utf8', (err, data) => {
 		if (err) {
 			console.log('Error reading magi file:', err);
 			return;
@@ -19,6 +27,10 @@ magiFilename.subscribe((value) => {
 
 		magi.loadMagiProject(currentRuntime, data);
 	});
+}
+
+magiFilename.subscribe((filename) => {
+  _loadMagiFile(filename);
 });
 
 export function saveMagiFile(filename) {
@@ -31,8 +43,8 @@ export function saveMagiFile(filename) {
 }
 
 let rivetWatcher;
-rivetFilename.subscribe((filename) => {
-	console.log('rivetWatcher', filename);
+function _loadRivetFile(filename) {
+  console.log('rivetWatcher', filename);
 	if (rivetWatcher) {
 		rivetWatcher.close();
 	}
@@ -53,24 +65,33 @@ rivetFilename.subscribe((filename) => {
 		readRivetProject();
 	});
 	readRivetProject();
+}
+rivetFilename.subscribe((filename) => {
+  _loadRivetFile(filename);
 });
 
 export function initializeMagi(options) {
-	if (!options)
+	if (!options) {
 		options = {
-			local: true
+			remote: !get(hostMagi)
 		};
-	if (options.local) {
-		currentRuntime = magi.createRuntime({}, {});
-	} else {
-		currentRuntime = magi.createRuntime(
-			{},
-			{
-				...options,
-				remote: true
-			}
-		);
+		if (get(useSocketIO)) {
+			options.socketAddress = get(socketIOUrl);
+      options.socketPrefix = get(socketIOBase);
+		}
 	}
+
+	currentRuntime = magi.createRuntime({}, options);
+
+  let _magiFilename = get(magiFilename);
+  let _rivetFilename = get(rivetFilename);
+
+  if (_magiFilename) {
+    _loadMagiFile(_magiFilename);
+  }
+  if (_rivetFilename) {
+    _loadRivetFile(_rivetFilename);
+  }
 
 	return currentRuntime;
 }
