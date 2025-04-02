@@ -19,7 +19,7 @@ export const rivetFilename = persisted('rivetFilename', '');
 let currentRuntime;
 
 function _loadMagiFile(filename) {
-  fs.readFile(filename, 'utf8', (err, data) => {
+	fs.readFile(filename, 'utf8', (err, data) => {
 		if (err) {
 			console.log('Error reading magi file:', err);
 			return;
@@ -30,7 +30,7 @@ function _loadMagiFile(filename) {
 }
 
 magiFilename.subscribe((filename) => {
-  _loadMagiFile(filename);
+	_loadMagiFile(filename);
 });
 
 export function saveMagiFile(filename) {
@@ -44,7 +44,7 @@ export function saveMagiFile(filename) {
 
 let rivetWatcher;
 function _loadRivetFile(filename) {
-  console.log('rivetWatcher', filename);
+	console.log('rivetWatcher', filename);
 	if (rivetWatcher) {
 		rivetWatcher.close();
 	}
@@ -67,31 +67,30 @@ function _loadRivetFile(filename) {
 	readRivetProject();
 }
 rivetFilename.subscribe((filename) => {
-  _loadRivetFile(filename);
+	_loadRivetFile(filename);
 });
 
-export function initializeMagi(options) {
-	if (!options) {
-		options = {
-			remote: !get(hostMagi)
-		};
-		if (get(useSocketIO)) {
-			options.socketAddress = get(socketIOUrl);
-      options.socketPrefix = get(socketIOBase);
-		}
+export function initializeMagi(baseRuntime) {
+  console.log("initializing magi");
+	let options = {
+		remote: !get(hostMagi)
+	};
+	if (get(useSocketIO)) {
+		options.socketAddress = get(socketIOUrl);
+		options.socketPrefix = get(socketIOBase);
 	}
+  console.log(options);
+	currentRuntime = magi.createRuntime({}, options, baseRuntime);
 
-	currentRuntime = magi.createRuntime({}, options);
+	let _magiFilename = get(magiFilename);
+	let _rivetFilename = get(rivetFilename);
 
-  let _magiFilename = get(magiFilename);
-  let _rivetFilename = get(rivetFilename);
-
-  if (_magiFilename) {
-    _loadMagiFile(_magiFilename);
-  }
-  if (_rivetFilename) {
-    _loadRivetFile(_rivetFilename);
-  }
+	if (_magiFilename) {
+		_loadMagiFile(_magiFilename);
+	}
+	if (_rivetFilename) {
+		_loadRivetFile(_rivetFilename);
+	}
 
 	return currentRuntime;
 }
